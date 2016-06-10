@@ -37,7 +37,7 @@ SyncREST.prototype = {
 			var recordList = JSON.parse(response.getBody()).result;
 			gs.debug('Body = ' + response.getBody(), 'SyncREST');
 			
-			new SymfoniRecordUtil().syncRecordListToTable(recordList, tableName, sysFields);
+			new SyncRecordUtil().syncRecordListToTable(recordList, tableName, sysFields);
 		}
 		catch(ex) {
 			gs.log('Error: ' + ex.getMessage(), 'SyncREST');
