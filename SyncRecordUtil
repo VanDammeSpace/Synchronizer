@@ -1,0 +1,45 @@
+var SyncRecordUtil = Class.create();
+SyncRecordUtil.prototype = Object.extendsObject(GlideRecordUtil, {
+	initialize: function() {
+	},
+	
+	syncRecordListToTable: function(recordList, tableName, sysFields) {
+		var grTable = new GlideRecord(tableName);
+		gs.log('Synching ' + grTable.getPlural() + ' records.', 'SyncRecordUtil');
+		var tableLabel = grTable.getLabel();
+		var sysFields = (sysFields !== false);
+		var fieldsToIgnore = sysFields ? {} : {sys_created_by:true, sys_created_on:true, sys_updated_by:true, sys_updated_on:true, sys_mod_count:true};
+		
+		
+		for (var i in recordList) {
+			
+			if (grTable.get(recordList[i].sys_id)) {
+				var recordDisplayValue = grTable.getDisplayValue();
+				// record already exists
+				var currentUpdatedOn = grTable.sys_updated_on.getGlideObject().getNumericValue();
+				//gs.log('current updated on = ' + currentUpdatedOn);
+				var loadedUpdatedOn  = GlideDateTime(recordList[i].sys_updated_on).getNumericValue();
+				//gs.log('loaded updated on = ' + loadedUpdatedOn);
+				if (loadedUpdatedOn > currentUpdatedOn) {
+					// load newer record
+					this.mergeToGR(recordList[i], grTable, fieldsToIgnore);
+					grTable.autoSysFields(sysFields);
+					grTable.update();
+					gs.log('Updated "' + tableLabel + '" record "' + recordDisplayValue + '" to newer version', 'SyncRecordUtil');
+				}
+				else {
+					gs.log(tableLabel + '" record "' + recordDisplayValue + '" is most recent version', 'SyncRecordUtil');
+				}
+			}
+			else {
+				grTable.initialize();
+				this.mergeToGR(recordList[i], grTable);
+				grTable.autoSysFields(sysFields);
+				grTable.insert();
+				gs.log('Inserting new "' + tableLabel + '" record "' + grTable.getDisplayValue() + '"', 'SyncRecordUtil');
+			}
+		}
+	},
+	
+	type: 'SyncRecordUtil'
+});
