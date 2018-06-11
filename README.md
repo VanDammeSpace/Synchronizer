@@ -8,12 +8,12 @@ Tools to synchronize data records between ServiceNow instances, by pulling recor
 
 ## PullData API
 1. syncTableRecords
-..* tableName: name of the table to query from
-..* encodedQuery: ServiceNow encoded query to select the records to read from the source
-..* ignoreFieldsList: list of fields, spearated by comma's, to ignore (`user_password,title`)
-..* keepMostRecentRecord: true/false, this option will not override the local (target) record if it was updated more recently than the remote (source) record
-..* setWorkflow: true/false, run Business Rules or not
-..* autoSysFields: true/false, copies system fields (sys_updated_on, sys_updated_by, sys_created_on, sys_created_by, sys_mod_count) from source when set to false
+* tableName: name of the table to query from
+* encodedQuery: ServiceNow encoded query to select the records to read from the source
+* ignoreFieldsList: list of fields, spearated by comma's, to ignore (`user_password,title`)
+* keepMostRecentRecord: true/false, this option will not override the local (target) record if it was updated more recently than the remote (source) record
+* setWorkflow: true/false, run Business Rules or not
+* autoSysFields: true/false, copies system fields (sys_updated_on, sys_updated_by, sys_created_on, sys_created_by, sys_mod_count) from source when set to false
 
 ## Background script example
 ```javascript
